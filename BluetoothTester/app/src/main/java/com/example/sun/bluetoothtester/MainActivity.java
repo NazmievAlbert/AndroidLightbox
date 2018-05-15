@@ -11,6 +11,7 @@ import android.os.ParcelUuid;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flask.colorpicker.ColorPickerView;
@@ -27,6 +28,8 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+   //TextView statusView;
+
     private static final String TAG = "MainActivity";
     //private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Default UUID for HC-05
 
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+       // statusView = (TextView)findViewById(R.id.textView_status);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "Device doesn't support Bluetooth");
@@ -57,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "...In onPause()...");
         if(!(btThread ==null)) btThread.cancel();
+
     }
 
 
@@ -93,27 +99,12 @@ public class MainActivity extends AppCompatActivity {
     public void onButtonClick(View view) {
 
         switch (view.getId()) {
-            case R.id.button_connect:                       //connect button is pressed
-                Log.d(TAG, "connect button is pressed");
-
-                if(!(btThread ==null))if(!btThread.isrunned) btThread.start();
-
-                break;
-
 
             case R.id.button_send:                       //send button is pressed
                 Log.d(TAG, "send button is pressed");
                 if(!(btThread ==null))if(btThread.isrunned)btThread.writeString("THello Hello");
                 break;
 
-            case R.id.button_cancel:
-                Log.d(TAG, "cancel button is pressed");
-
-                if(!(btThread ==null))if(btThread.isrunned) btThread.cancel();
-
-
-
-                break;
             case R.id.button_send_colors:
 
                 ColorPickerDialogBuilder
@@ -233,18 +224,19 @@ public class MainActivity extends AppCompatActivity {
             try {
                 tmp = btDevice.createRfcommSocketToServiceRecord(uuid);
                 Log.d(TAG, "Creating the socket");
+
              } catch (IOException e) {
                 Log.e(TAG, "Socket's create() method failed", e);
             }
             btSocket = tmp;
 
-            timestamp = System.currentTimeMillis();
+
             try {
             Thread.sleep(200);
             } catch (Exception e){
                 Log.e(TAG, "Can't wait", e);
             }
-            timestamp=System.currentTimeMillis()-timestamp;
+
 
             Log.d(TAG, "Difference = " + timestamp.toString());
             try {
